@@ -6,7 +6,7 @@ const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   mode: 'development',
-  entry: './src/main.js',
+  entry: './src/weather-interface.js',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
@@ -16,21 +16,6 @@ module.exports = {
     contentBase: './dist'
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      title: 'Weather Interface',
-      template: './src/index.html',
-      inject: 'body'
-    })
-  ],
-  plugins: [
-    new CleanWebpackPlugin(['dist']),   // new line
-    new HtmlWebpackPlugin({
-      title: 'Weather Interface',
-      template: './src/index.html',
-      inject: 'body'
-    })
-  ],
-  plugins: [
     new UglifyJsPlugin({ sourceMap: true }),
     new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
@@ -38,7 +23,7 @@ module.exports = {
       template: './src/index.html',
       inject: 'body'
     }),
-    new Dotenv();
+    new Dotenv()
   ],
   module: {
     rules: [

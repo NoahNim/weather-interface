@@ -1,41 +1,29 @@
-// $(document).ready(function(){
-//   $('#weatherLocation').click(function(){
-//     let city = $('#location').val
-//     $('#location').val("");
-//     $.ajax({
-//       url: `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=ee010824608eb0b2064df3149ab5ba20`,
-//       type: 'GET',
-//       data: {
-//         format: 'json'
-//       },
-//       success: function(response) {
-//         $('.showHumidity').text('The humidity in $(city) is ${response.main.humidity}%');
-//         $('.showTemp').text('The temperature in Kelvins is ${response.main.temp}. ');
-//       },
-//     error: function() {
-//       $('#errors').text("There was an error processing your request. Please try again");
-//       }
-//     });
-//   });
-// });
-
 $(document).ready(function() {
+  let Promise = require('es6-promise').Promise;
   $('#weatherLocation').click(function() {
     let city = $('#location').val();
     $('#location').val("");
-    $.ajax({
-      url: `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=ee010824608eb0b2064df3149ab5ba20`,
-      type: 'GET',
-      data: {
-        format: 'json'
-      },
-      success: function(response) {
-        $('.showHumidity').text(`The humidity in ${city} is ${response.main.humidity}%`);
-        $('.showTemp').text(`The temperature in Kelvins is ${response.main.temp}.`);
-      },
-      error: function() {
-        $('#errors').text("There was an error processing your request. Please try again.");
+
+    let promise = new Promise(function(resolve, reject) {
+      let request = new XMLHttpRequest();
+      let url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.API_KEY}`;
+      request.onload = function() {
+        if (this.status === 200) {
+          resolve(request.response);
+        } else {
+          reject(Error(request.statusText));
+        }
       }
+      request.open("GET", url, true);
+      request.send();
+    });
+
+    promise.then(function(response) {
+      let body = JSON.parse(response);
+      $('.showHumidity').text(`The humidity in ${city} is ${body.main.humidity}%`);
+      $('.showTemp').text(`The temperature in Kelvins is ${body.main.temp} degrees.`);
+    }, function(error) {
+      $('.showErrors').text(`There was an error processing your request: ${error.message}`);
     });
   });
 });
