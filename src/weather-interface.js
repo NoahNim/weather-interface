@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  let Promise = require('es6-promise').Promise;
+  // let Promise = require('es6-promise').Promise;
   $('#weatherLocation').click(function() {
     let city = $('#location').val();
     $('#location').val("");
